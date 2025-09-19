@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: Sindhu
+      POSTGRES_PASSWORD: Sindhu@21
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  app:
+    build: .
+    container_name: python_app
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DB_NAME: mydb
+      DB_USER: Sindhu
+      DB_PASSWORD: Sindhu@21
+      DB_HOST: db
+      DB_PORT: 5432
+    ports:
+      - "8000:8000"
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
+
+networks:
+  app_network:
